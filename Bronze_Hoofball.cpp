@@ -224,11 +224,6 @@ void solve()
     adj.resize(n);
     adj[0].pb(1);
     indegree[1]++;
-    if(n>=2) 
-    {
-        adj[n-1].pb(n-2);
-        indegree[n-2]++;
-    }
     fr(i,1,n-1)
     {
         if(a[i]-a[i-1]<=a[i+1]-a[i]) 
