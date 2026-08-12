@@ -242,6 +242,7 @@ void dfs(ll tile,ll boot)
             fr(j,1,sd[i].second+1)
             {
                 if(tile+j<n && f[tile+j]<=sd[i].first && !visited[tile+j][i]) dfs(tile+j,i);
+                if(ans==0) return;
             }
         }
     }
