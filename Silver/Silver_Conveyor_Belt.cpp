@@ -1,0 +1,318 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef vector<long long> vll;
+#define pb push_back
+#define nl "\n"
+#define fr(i,a,b) for (ll i = a; i < b; i++)
+#define rep(i,a,b) for (ll i = a; i >= b; i--)
+#define all(a) a.begin(),a.end()
+class dsu
+{   
+    public:
+        vll parent;
+        vll size;
+        dsu(ll n)
+        {
+            parent.resize(n+1);
+            size.resize(n+1,1);
+            fr(i,1,n+1) 
+            {   
+                parent[i]=i;
+            }
+        }
+        ll find(ll x) 
+        {
+            if (x != parent[x]) 
+            {
+                parent[x] = find(parent[x]);
+            }
+            return parent[x];
+        }
+        bool same(ll a, ll b) 
+        {
+            return find(a)==find(b);
+        }
+        void join(ll a, ll b) 
+        {            
+            a=find(a);
+            b = find(b);
+            if(a==b) return;
+            if(size[a]<size[b]) swap(a,b);
+            size[a] += size[b];
+            parent[b]=a;
+        }
+};
+// class segtree
+// {
+//     public:
+//         vector<ll> tree;
+//         segtree(ll n)
+//         {
+//             tree.resize(4*n,0);
+//         }
+//         void build(vector<ll>& v,ll x,ll tl,ll tr)
+//         {
+//             if(tl==tr)
+//             {
+//                 tree[x]=v[tl];
+//                 return;
+//             }
+//             ll mid=(tl+tr)/2;
+//             build(v,2*x,tl,mid);
+//             build(v,2*x+1,mid+1,tr);
+//             tree[x]=tree[2*x]+tree[2*x+1];
+//         }
+//         void update(ll pos,ll val,ll x,ll tl,ll tr)
+//         {
+//             if(tl==tr)
+//             {
+//                 tree[x]=val;
+//                 return;
+//             }
+//             ll mid=(tl+tr)/2;
+//             if(pos<=mid) update(pos,val,2*x,tl,mid);
+//             else update(pos,val,2*x+1,mid+1,tr);
+//             tree[x]=gcd(tree[2*x],tree[2*x+1]);
+//         }
+//         ll query(ll l,ll r,ll x,ll tl,ll tr)
+//         {
+//             if(r<tl||tr<l) return 0;
+//             if(l<=tl&&tr<=r) return tree[x];
+//             ll mid=(tl+tr)/2;
+//             return gcd(query(l,r,2*x,tl,mid),query(l,r,2*x+1,mid+1,tr));
+//         }
+// };
+
+// class segtree
+// {
+//     public:
+//         vector<ll> tree;
+//         segtree(ll n)
+//         {
+//             tree.resize(4*n,LLONG_MAX);
+//         }
+//         void build(vector<ll>& v,ll x,ll tl,ll tr)
+//         {
+//             if(tl==tr)
+//             {
+//                 tree[x]=v[tl];
+//                 return;
+//             }
+//             ll mid=(tl+tr)/2;
+//             build(v,2*x,tl,mid);
+//             build(v,2*x+1,mid+1,tr);
+//             tree[x]=min(tree[2*x],tree[2*x+1]);
+//         }
+//         void update(ll pos,ll val,ll x,ll tl,ll tr)
+//         {
+//             if(tl==tr)
+//             {
+//                 tree[x]=val;
+//                 return;
+//             }
+//             ll mid=(tl+tr)/2;
+//             if(pos<=mid) update(pos,val,2*x,tl,mid);
+//             else update(pos,val,2*x+1,mid+1,tr);
+//             tree[x]=min(tree[2*x],tree[2*x+1]);
+//         }
+//         ll query(ll l,ll r,ll x,ll tl,ll tr)
+//         {
+//             if(r<tl||tr<l) return LLONG_MAX;
+//             if(l<=tl&&tr<=r) return tree[x];
+//             ll mid=(tl+tr)/2;
+//             return min(query(l,r,2*x,tl,mid),query(l,r,2*x+1,mid+1,tr));
+//         }
+// };
+
+// ll dist(ll x1,ll y1,ll x2,ll y2)
+// {
+//     return (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1);
+// }
+ 
+long long MOD = 998244353;
+ 
+long long modpow(long long a, long long b) 
+{
+    long long res = 1;
+    a %= MOD;
+    while (b > 0) {
+        if (b & 1) res = (res * a) % MOD;
+        a = (a * a) % MOD;
+        b >>= 1;
+    }
+    return res;
+}
+ 
+long long modinv(long long q) 
+{
+    return modpow(q, MOD - 2);
+}
+ 
+bool isprime(ll n)
+{
+    ll i=2;
+    while(i*i<=n)
+    {
+        if(n%i==0) return false;
+        i++;
+    }
+    return true;
+}
+vector<bool> a;
+ll sieve(ll n)
+{
+    ll limit=n*log(n*log(n))+10,count=0;
+    limit=max(1ll*15,limit);
+    limit=n+1;
+    a.resize(limit,1);
+    a[0]=0;
+    a[1]=0;
+    ll ans=0;
+    fr(i,2,limit)
+    {
+        if(a[i])
+        {   
+            ans+=i;
+            for(ll j=i*2;j<limit;j+=i) a[j]=0;
+        }
+    }
+    return ans;
+}
+// static long long merge_count(vector<long long>& a) {
+//     vector<long long> tmp(a.size());
+//     function<long long(size_t,size_t)> solve = [&](size_t L, size_t R) -> long long {
+//         if (R - L <= 1) return 0;
+//         size_t M = (L + R) / 2;
+//         long long cnt = solve(L, M) + solve(M, R);
+ 
+//         size_t i = L, j = M, k = L;
+//         while (i < M || j < R) {
+//             if (j == R || (i < M && a[i] <= a[j])) tmp[k++] = a[i++];
+//             else { tmp[k++] = a[j++]; cnt += (M - i); }
+//         }
+//         for (size_t t = L; t < R; ++t) a[t] = tmp[t];
+//         return cnt;
+//     };
+//     return solve(0, a.size());
+// }
+ 
+// // Accepts a vector<int>, prints and returns the number of swaps required.
+// long long swaps_to_sort(const vector<ll>& arr) {
+//     vector<long long> v(arr.begin(), arr.end());
+//     long long swaps = merge_count(v);
+//     // cout << swaps << '\n';
+//     return swaps;
+// }
+// vll intersect(ll a,ll b,ll c,ll d,ll p,ll q,ll r,ll s)
+// {
+//     if(q>=d || s<=b || p>=c || r<=a) return {0,0,0,0};
+//     else 
+//     {
+//         ll t(0),bb(0),l(0),rr(0);
+//         if(d<=s) t=1;
+//         if(b>=q) bb=1;
+//         if(a>=p) l=1;
+//         if(c<=r1) rr=1;
+//         return {t,bb,l,rr};
+//     }
+// }
+// bool comp(pair<ll,ll> a,pair<ll,ll> b)
+// {
+//     if(a.first<b.first) return true;
+//     else if(a.first==b.first)
+//     {
+//         if(a.second>=b.second) return true; 
+//     }
+//     return false;
+// }
+ll n,q;
+vll f;
+vector<string> grid;
+vector<vll> belt;
+vector<vll> good,visited;
+map<char,ll> m;
+ll dfs(ll i,ll j)
+{
+    if(visited[i][j]) return 0;
+    visited[i][j]=1;
+    good[i][j]=1;
+    ll g=1;
+    if(i+1<n && (grid[i+1][j]=='?' || grid[i+1][j]=='U')) g+=dfs(i+1,j);
+    if(i-1>=0 && (grid[i-1][j]=='?' || grid[i-1][j]=='D')) g+=dfs(i-1,j);
+    if(j+1<n && (grid[i][j+1]=='?' || grid[i][j+1]=='L')) g+=dfs(i,j+1);
+    if(j-1>=0 && (grid[i][j-1]=='?' || grid[i][j-1]=='R')) g+=dfs(i,j-1);
+    return g;
+}
+void solve()
+{   
+    cin>>n>>q;
+    m={{'R',1},{'L',2},{'U',3},{'D',4}};
+    grid.resize(n,string(n,'?'));
+    good.resize(n,vll(n,0));
+    visited.resize(n,vll(n,0));
+    fr(i,0,q)
+    {
+        ll a,b;
+        cin>>a>>b;
+        char c;
+        cin>>c;
+        belt.pb({a,b,m[c]});
+        grid[--a][--b]=c;
+    }
+    fr(i,0,n)
+    {
+        fr(j,0,n)
+        {
+            if(!(i==0 || i==n-1 || j==0 || j==n-1)) continue;
+            if(grid[i][j]=='?') good[i][j]=1;
+            else
+            {
+                if(i==0 && grid[i][j]=='U') good[i][j]=1;
+                if(i==n-1 && grid[i][j]=='D') good[i][j]=1;
+                if(j==n-1 && grid[i][j]=='R') good[i][j]=1;
+                if(j==0 && grid[i][j]=='L') good[i][j]=1;
+            }
+        }
+    }
+    ll g=0;
+    fr(i,0,n)
+    {
+        fr(j,0,n)
+        {
+            if(good[i][j]==1 && !visited[i][j]) g+=dfs(i,j);
+        }
+    }
+    vll ans(q);
+    ans[q-1]=n*n-g;
+    rep(i,q-1,1)
+    {
+        ll x=belt[i][0]-1,y=belt[i][1]-1;
+        grid[x][y]='?';
+        if(good[x][y]==1) ans[i-1]=n*n-g;
+        else
+        {
+            if(x+1<n && good[x+1][y]==1) good[x][y]=1;
+            if(x-1>=0 && good[x-1][y]==1) good[x][y]=1;
+            if(y-1>=0 && good[x][y-1]==1) good[x][y]=1;
+            if(y+1<n && good[x][y+1]==1) good[x][y]=1;
+            if(x==0 || x==n-1 || y==0 || y==n-1) good[x][y]=1;
+            if(!visited[x][y] && good[x][y]==1)g+=(dfs(x,y));
+            ans[i-1]=n*n-g;
+        }
+    }
+    fr(i,0,q) cout<<ans[i]<<nl;
+}    
+
+signed main()
+{ 
+    // freopen("snowboots.in","r",stdin);
+    // freopen("snowboots.out","w",stdout);
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    // ll _=sieve(100000);
+    // ll t; cin>>t; 
+    // while(t--)  
+    solve();
+}
